@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Trade, TradeType, WETH } from '@uniswap/sdk'
+import { TokenAmount, Trade, TradeType, WETH } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -32,6 +32,11 @@ enum SwapType {
 
 function getSwapType(trade: Trade | undefined): SwapType | undefined {
   if (!trade) return undefined
+
+  // TODO(moodysalem): replace with currency amount handling logic
+  if (!(trade.inputAmount instanceof TokenAmount)) return undefined
+  if (!(trade.outputAmount instanceof TokenAmount)) return undefined
+
   const chainId = trade.inputAmount.token.chainId
   const inputWETH = trade.inputAmount.token.equals(WETH[chainId])
   const outputWETH = trade.outputAmount.token.equals(WETH[chainId])
@@ -71,7 +76,7 @@ export function useSwapCallback(
   const tradeVersion = getTradeVersion(trade)
   const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
   const inputAllowance = useTokenAllowance(
-    trade?.inputAmount?.token,
+    trade?.inputAmount instanceof TokenAmount ? trade?.inputAmount?.token : undefined,
     account ?? undefined,
     tradeVersion === Version.v1 ? v1Exchange?.address : ROUTER_ADDRESS
   )
@@ -85,11 +90,15 @@ export function useSwapCallback(
       [Field.OUTPUT]: slippageAdjustedOutput
     } = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
-    if (!slippageAdjustedInput || !slippageAdjustedOutput) return null
+    if (!slippageAdjustedInput || !slippageAdjustedOutput || !chainId) return null
+
+    // TODO(moodysalem): replace with currency amount handling logic
+    if (!(trade.inputAmount instanceof TokenAmount)) return null
+    if (!(trade.outputAmount instanceof TokenAmount)) return null
 
     // no allowance
     if (
-      !trade.inputAmount.token.equals(WETH[chainId as ChainId]) &&
+      !trade.inputAmount.token.equals(WETH[chainId]) &&
       (!inputAllowance || slippageAdjustedInput.greaterThan(inputAllowance))
     ) {
       return null
@@ -99,6 +108,10 @@ export function useSwapCallback(
       if (!chainId || !library || !account) {
         throw new Error('missing dependencies in onSwap callback')
       }
+
+      // TODO(moodysalem): replace with currency amount handling logic
+      if (!(trade.inputAmount instanceof TokenAmount)) return null
+      if (!(trade.outputAmount instanceof TokenAmount)) return null
 
       const contract: Contract | null =
         tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
@@ -277,8 +290,8 @@ export function useSwapCallback(
           ...(value ? { value } : {})
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.token.symbol
-            const outputSymbol = trade.outputAmount.token.symbol
+            const inputSymbol = trade.inputAmount.currency.symbol
+            const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = slippageAdjustedInput.toSignificant(3)
             const outputAmount = slippageAdjustedOutput.toSignificant(3)
 

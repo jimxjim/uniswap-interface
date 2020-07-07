@@ -11,11 +11,11 @@ import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import DoubleLogo from '../../components/DoubleLogo'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import PositionCard from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFixed, RowFlat } from '../../components/Row'
 
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 
 import { ROUTER_ADDRESS, MIN_ETH, ONE_BIPS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
@@ -200,7 +200,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
             <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
               {tokens[Field.TOKEN_A]?.symbol + '/' + tokens[Field.TOKEN_B]?.symbol}
             </Text>
-            <DoubleLogo a0={tokens[Field.TOKEN_A]?.address} a1={tokens[Field.TOKEN_B]?.address} size={30} />
+            <DoubleCurrencyLogo currency0={tokens[Field.TOKEN_A]} currency1={tokens[Field.TOKEN_B]} size={30} />
           </RowFlat>
         </LightCard>
       </AutoColumn>
@@ -210,7 +210,7 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
           <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
-          <DoubleLogo a0={tokens[Field.TOKEN_A]?.address} a1={tokens[Field.TOKEN_B]?.address} size={30} />
+          <DoubleCurrencyLogo currency0={tokens[Field.TOKEN_A]} currency1={tokens[Field.TOKEN_B]} size={30} />
         </RowFlat>
         <Row>
           <Text fontSize="24px">
@@ -231,14 +231,14 @@ export default function AddLiquidity({ match: { params } }: RouteComponentProps<
         <RowBetween>
           <TYPE.body>{tokens[Field.TOKEN_A]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_A]?.address} style={{ marginRight: '8px' }} />
+            <CurrencyLogo currency={tokens[Field.TOKEN_A]} style={{ marginRight: '8px' }} />
             <TYPE.body>{parsedAmounts[Field.TOKEN_A]?.toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <TYPE.body>{tokens[Field.TOKEN_B]?.symbol} Deposited</TYPE.body>
           <RowFixed>
-            <TokenLogo address={tokens[Field.TOKEN_B]?.address} style={{ marginRight: '8px' }} />
+            <CurrencyLogo currency={tokens[Field.TOKEN_B]} style={{ marginRight: '8px' }} />
             <TYPE.body>{parsedAmounts[Field.TOKEN_B]?.toSignificant(6)}</TYPE.body>
           </RowFixed>
         </RowBetween>

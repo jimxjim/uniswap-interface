@@ -3,7 +3,7 @@ import React from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../Button'
-import DoubleTokenLogo from '../DoubleLogo'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowFixed } from '../Row'
 import { MenuItem, ModalInfo } from './styleds'
 
@@ -43,7 +43,7 @@ export default function PairList({
         return (
           <MenuItem style={style} onClick={selectPair}>
             <RowFixed>
-              <DoubleTokenLogo a0={tokenA.address} a1={tokenB.address} size={24} margin={true} />
+              <DoubleCurrencyLogo currency0={tokenA} currency1={tokenB} size={24} margin={true} />
               <Text fontWeight={500} fontSize={16}>{`${tokenA.symbol}/${tokenB.symbol}`}</Text>
             </RowFixed>
 

@@ -1,6 +1,6 @@
 import { Version } from './../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -59,14 +59,16 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, token?: Token): TokenAmount | undefined {
-  if (!value || !token) {
+export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
+  if (!value || !currency) {
     return
   }
   try {
-    const typedValueParsed = parseUnits(value, token.decimals).toString()
+    const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return new TokenAmount(token, JSBI.BigInt(typedValueParsed))
+      return currency instanceof Token
+        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -80,7 +82,7 @@ export function tryParseAmount(value?: string, token?: Token): TokenAmount | und
 export function useDerivedSwapInfo(): {
   tokens: { [field in Field]?: Token }
   tokenBalances: { [field in Field]?: TokenAmount }
-  parsedAmount: TokenAmount | undefined
+  parsedAmount: CurrencyAmount | undefined
   bestTrade: Trade | null
   error?: string
   v1Trade: Trade | undefined
@@ -146,7 +148,7 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmountsV1 =
     v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
 
-  // compare input balance to MAx input based on version
+  // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
     tokenBalances[Field.INPUT],
     toggledVersion === Version.v1
@@ -159,7 +161,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    error = 'Insufficient ' + amountIn.token.symbol + ' balance'
+    error = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
   return {

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { WETH, TokenAmount, JSBI, ChainId } from '@uniswap/sdk'
+import { WETH, TokenAmount, JSBI, ChainId, CurrencyAmount } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
@@ -12,7 +12,9 @@ import useENSName from './useENSName'
 
 // returns a callback for sending a token amount, treating WETH as ETH
 // returns null with invalid arguments
-export function useSendCallback(amount?: TokenAmount, recipient?: string): null | (() => Promise<string>) {
+export function useSendCallback(currencyAmount?: CurrencyAmount, recipient?: string): null | (() => Promise<string>) {
+  // TODO(moodysalem): handle currency amounts
+  const amount = currencyAmount && currencyAmount instanceof TokenAmount ? currencyAmount : undefined
   const { library, account, chainId } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
   const ensName = useENSName(recipient)

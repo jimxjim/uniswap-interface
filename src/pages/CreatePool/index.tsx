@@ -4,7 +4,7 @@ import { Token, WETH } from '@uniswap/sdk'
 import AppBody from '../AppBody'
 
 import Row, { AutoRow } from '../../components/Row'
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import TokenSearchModal from '../../components/SearchModal/TokenSearchModal'
 import { Text } from 'rebass'
 import { Plus } from 'react-feather'
@@ -75,7 +75,7 @@ export default function CreatePool({ location }: RouteComponentProps) {
               }}
             >
               <Row align="flex-end">
-                <TokenLogo address={token0Address} />
+                <CurrencyLogo currency={token0} />
                 <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                   {token0?.symbol}{' '}
                 </Text>
@@ -106,7 +106,7 @@ export default function CreatePool({ location }: RouteComponentProps) {
               }}
             >
               <Row>
-                <TokenLogo address={token1Address} />
+                <CurrencyLogo currency={token1} />
                 <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
                   {token1?.symbol}
                 </Text>

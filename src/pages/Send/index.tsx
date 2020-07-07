@@ -18,7 +18,7 @@ import { ArrowWrapper, BottomGrouping, Dots, InputGroup, StyledNumerical, Wrappe
 import TradePrice from '../../components/swap/TradePrice'
 import { TransferModalHeader } from '../../components/swap/TransferModalHeader'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
-import TokenLogo from '../../components/TokenLogo'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { INITIAL_ALLOWED_SLIPPAGE, MIN_ETH, BETTER_TRADE_LINK_THRESHOLD } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
@@ -178,8 +178,8 @@ export default function Send() {
           category: 'Send',
           action: recipient === account ? 'Swap w/o Send' : 'Swap w/ Send',
           label: [
-            bestTrade.inputAmount.token.symbol,
-            bestTrade.outputAmount.token.symbol,
+            bestTrade.inputAmount.currency.symbol,
+            bestTrade.outputAmount.currency.symbol,
             getTradeVersion(bestTrade)
           ].join('/')
         })
@@ -237,7 +237,7 @@ export default function Send() {
         <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
           <AutoColumn gap="sm">
             <AutoRow gap="10px">
-              <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'30px'} />
+              <CurrencyLogo currency={tokens[Field.OUTPUT]} size={'30px'} />
               <Text fontSize={36} fontWeight={500}>
                 {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} {tokens[Field.OUTPUT]?.symbol}
               </Text>

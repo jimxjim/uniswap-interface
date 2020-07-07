@@ -1,4 +1,4 @@
-import { TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount } from '@uniswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
@@ -7,7 +7,7 @@ import { getEtherscanLink } from '../../utils'
 import Copy from '../AccountDetails/Copy'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 
 export function TransferModalHeader({
   recipient,
@@ -16,16 +16,16 @@ export function TransferModalHeader({
 }: {
   recipient: string
   ENSName: string
-  amount: TokenAmount
+  amount: CurrencyAmount
 }) {
   const { chainId } = useActiveWeb3React()
   return (
     <AutoColumn gap="lg" style={{ marginTop: '40px' }}>
       <RowBetween>
         <Text fontSize={36} fontWeight={500}>
-          {amount?.toSignificant(6)} {amount?.token?.symbol}
+          {amount?.toSignificant(6)} {amount?.currency?.symbol}
         </Text>
-        <TokenLogo address={amount?.token?.address} size={'30px'} />
+        <CurrencyLogo currency={amount?.currency} size={'30px'} />
       </RowBetween>
       <TYPE.darkGray fontSize={20}>To</TYPE.darkGray>
       {ENSName ? (

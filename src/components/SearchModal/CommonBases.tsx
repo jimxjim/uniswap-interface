@@ -6,7 +6,7 @@ import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 import { BaseWrapper } from './styleds'
 
 export default function CommonBases({
@@ -35,7 +35,7 @@ export default function CommonBases({
               disable={selectedTokenAddress === token.address}
               key={token.address}
             >
-              <TokenLogo address={token.address} />
+              <CurrencyLogo currency={token} />
               <Text fontWeight={500} fontSize={16}>
                 {token.symbol}
               </Text>

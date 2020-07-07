@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, Token } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -7,7 +7,7 @@ import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import TokenLogo from '../TokenLogo'
+import CurrencyLogo from '../CurrencyLogo'
 import { TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
@@ -19,7 +19,7 @@ export default function SwapModalHeader({
 }: {
   tokens: { [field in Field]?: Token }
   formattedAmounts: { [field in Field]?: string }
-  slippageAdjustedAmounts: { [field in Field]?: TokenAmount }
+  slippageAdjustedAmounts: { [field in Field]?: CurrencyAmount }
   priceImpactSeverity: number
   independentField: Field
 }) {
@@ -32,7 +32,7 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.INPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <TokenLogo address={tokens[Field.INPUT]?.address} size={'24px'} />
+          <CurrencyLogo currency={tokens[Field.INPUT]} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
             {tokens[Field.INPUT]?.symbol}
           </Text>
@@ -46,7 +46,7 @@ export default function SwapModalHeader({
           {formattedAmounts[Field.OUTPUT]}
         </TruncatedText>
         <RowFixed gap="4px">
-          <TokenLogo address={tokens[Field.OUTPUT]?.address} size={'24px'} />
+          <CurrencyLogo currency={tokens[Field.OUTPUT]} size={'24px'} />
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
             {tokens[Field.OUTPUT]?.symbol}
           </Text>

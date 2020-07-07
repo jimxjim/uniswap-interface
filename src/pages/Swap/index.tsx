@@ -147,8 +147,8 @@ export default function Swap() {
           category: 'Swap',
           action: 'Swap w/o Send',
           label: [
-            bestTrade.inputAmount.token.symbol,
-            bestTrade.outputAmount.token.symbol,
+            bestTrade.inputAmount.currency.symbol,
+            bestTrade.outputAmount.currency.symbol,
             getTradeVersion(bestTrade)
           ].join('/')
         })
