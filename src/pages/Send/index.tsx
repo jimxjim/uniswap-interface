@@ -35,7 +35,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
+import { useAllTokenBalances } from '../../state/wallet/hooks'
 import { CursorPointer, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -293,7 +293,7 @@ export default function Send() {
     ? `Sending ${parsedAmounts[Field.OUTPUT]?.toSignificant(6)} ${tokens[Field.OUTPUT]?.symbol} to ${recipient}`
     : `Sending ${parsedAmounts[Field.INPUT]?.toSignificant(6)} ${tokens[Field.INPUT]?.symbol} to ${recipient}`
 
-  const allBalances = useAllTokenBalancesTreatingWETHasETH() // only for 0 balance token selection behavior
+  const allBalances = useAllTokenBalances() // only for 0 balance token selection behavior
   const swapState = useSwapState()
   function _onTokenSelect(address: string) {
     // if no user balance - switch view to a send with swap

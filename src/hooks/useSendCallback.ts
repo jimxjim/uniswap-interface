@@ -1,25 +1,23 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { WETH, TokenAmount, JSBI, ChainId, CurrencyAmount } from '@uniswap/sdk'
+import { TokenAmount, JSBI, CurrencyAmount, ETHER } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { useTokenBalanceTreatingWETHasETH } from '../state/wallet/hooks'
+import { useCurrencyBalance } from '../state/wallet/hooks'
 
 import { calculateGasMargin, getSigner, isAddress } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import useENSName from './useENSName'
 
-// returns a callback for sending a token amount, treating WETH as ETH
+// returns a callback for sending a currency amount
 // returns null with invalid arguments
-export function useSendCallback(currencyAmount?: CurrencyAmount, recipient?: string): null | (() => Promise<string>) {
-  // TODO(moodysalem): handle currency amounts
-  const amount = currencyAmount && currencyAmount instanceof TokenAmount ? currencyAmount : undefined
+export function useSendCallback(amount?: CurrencyAmount, recipient?: string): null | (() => Promise<string>) {
   const { library, account, chainId } = useActiveWeb3React()
   const addTransaction = useTransactionAdder()
   const ensName = useENSName(recipient)
-  const tokenContract = useTokenContract(amount?.token?.address)
-  const balance = useTokenBalanceTreatingWETHasETH(account ?? undefined, amount?.token)
+  const tokenContract = useTokenContract(amount instanceof TokenAmount ? amount?.token?.address : undefined)
+  const balance = useCurrencyBalance(account ?? undefined, amount?.currency)
 
   return useMemo(() => {
     if (!amount) return null
@@ -28,18 +26,17 @@ export function useSendCallback(currencyAmount?: CurrencyAmount, recipient?: str
     if (!balance) return null
     if (balance.lessThan(amount)) return null
 
-    const token = amount?.token
-
     return async function onSend(): Promise<string> {
       if (!chainId || !library || !account || !tokenContract) {
         throw new Error('missing dependencies in onSend callback')
       }
-      if (token.equals(WETH[chainId as ChainId])) {
+      if (amount.currency === ETHER) {
         return getSigner(library, account)
           .sendTransaction({ to: recipient, value: BigNumber.from(amount.raw.toString()) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: 'Send ' + amount.toSignificant(3) + ' ' + token?.symbol + ' to ' + (ensName ?? recipient)
+              summary:
+                'Send ' + amount.toSignificant(3) + ' ' + amount.currency.symbol + ' to ' + (ensName ?? recipient)
             })
             return response.hash
           })
@@ -57,7 +54,8 @@ export function useSendCallback(currencyAmount?: CurrencyAmount, recipient?: str
               })
               .then((response: TransactionResponse) => {
                 addTransaction(response, {
-                  summary: 'Send ' + amount.toSignificant(3) + ' ' + token.symbol + ' to ' + (ensName ?? recipient)
+                  summary:
+                    'Send ' + amount.toSignificant(3) + ' ' + amount.currency.symbol + ' to ' + (ensName ?? recipient)
                 })
                 return response.hash
               })

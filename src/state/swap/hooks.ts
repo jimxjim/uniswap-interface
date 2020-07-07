@@ -1,3 +1,4 @@
+import { useTokenBalances } from '../wallet/hooks'
 import { Version } from './../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade, WETH } from '@uniswap/sdk'
@@ -11,7 +12,6 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
-import { useTokenBalancesTreatWETHAsETH } from '../wallet/hooks'
 import { Field, replaceSwapState, selectToken, switchTokens, typeInput } from './actions'
 import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
@@ -101,10 +101,7 @@ export function useDerivedSwapInfo(): {
   const tokenIn = useToken(tokenInAddress)
   const tokenOut = useToken(tokenOutAddress)
 
-  const relevantTokenBalances = useTokenBalancesTreatWETHAsETH(account ?? undefined, [
-    tokenIn ?? undefined,
-    tokenOut ?? undefined
-  ])
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [tokenIn ?? undefined, tokenOut ?? undefined])
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? tokenIn : tokenOut) ?? undefined)
