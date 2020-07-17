@@ -218,8 +218,29 @@ function validatedRecipient(recipient: any): string | null {
 }
 
 export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
+  const defaultCurrency = (chainId: ChainId) => {
+    switch (chainId) {
+      case 1:
+      case 4:
+        return {
+          [Field.INPUT]: '0x30eE63b46C73817ef883eA4aB6BAbB954B54588d',
+          [Field.OUTPUT]: '0x4cA466252cc976c4C729E58bAE309032a868E7BF'
+        }
+      default:
+        return {
+          [Field.INPUT]: '0x30eE63b46C73817ef883eA4aB6BAbB954B54588d',
+          [Field.OUTPUT]: '0x4cA466252cc976c4C729E58bAE309032a868E7BF'
+        }
+    }
+  }
+  let inputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.inputCurrency || defaultCurrency(chainId)[Field.INPUT],
+    chainId
+  )
+  let outputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.outputCurrency || defaultCurrency(chainId)[Field.OUTPUT],
+    chainId
+  )
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
       inputCurrency = ''

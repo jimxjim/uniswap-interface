@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, CursorPointer } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -20,16 +20,16 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }}>
+      <AutoColumn gap="4px" style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
-            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
+            {/* <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." /> */}
           </RowFixed>
           <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
+            <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.token.symbol}` ?? '-'
                 : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.token.symbol}` ?? '-'}
@@ -38,24 +38,46 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
               Price Impact
             </TYPE.black>
-            <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+            {/* <QuestionHelper text="The difference between the market price and estimated price due to trade size." /> */}
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
               Liquidity Provider Fee
             </TYPE.black>
-            <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
+            {/* <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." /> */}
           </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
+          <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.token.symbol}` : '-'}
           </TYPE.black>
+        </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
+              Slippage Tolerance
+            </TYPE.black>
+            {/* <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." /> */}
+          </RowFixed>
+          <TYPE.black fontSize={14} fontWeight={'normal'} color={theme.text2} letterSpacing={1}>
+            {allowedSlippage ? allowedSlippage / 100 : '-'}%
+          </TYPE.black>
+        </RowBetween>
+
+        <RowBetween>
+          <RowFixed>
+            <CursorPointer>
+              <TYPE.black fontSize={16} fontWeight={600} color={theme.primary6} lineHeight={1.75}>
+                Learn More
+              </TYPE.black>
+            </CursorPointer>
+          </RowFixed>
         </RowBetween>
       </AutoColumn>
     </>

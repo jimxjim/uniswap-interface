@@ -42,7 +42,7 @@ export function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text2: darkMode ? '#C3C5CB' : '#352d33',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
@@ -53,6 +53,7 @@ export function colors(darkMode: boolean): Colors {
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#565A69' : '#888D9B',
+    bgBlue: 'linear-gradient(293deg, #bac4dd 32%, #5061bf 100%);',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
@@ -64,7 +65,7 @@ export function colors(darkMode: boolean): Colors {
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
-
+    primary6: '#5061bf',
     // color text
     primaryText1: darkMode ? '#6da8ff' : '#ff007a',
 
@@ -77,7 +78,9 @@ export function colors(darkMode: boolean): Colors {
     red1: '#FF6871',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E'
+    yellow2: '#F3841E',
+
+    paleGrey: '#f6f8ff'
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -88,7 +91,6 @@ export function colors(darkMode: boolean): Colors {
 export function theme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
-
     grids: {
       sm: 8,
       md: 12,
@@ -169,12 +171,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'gill-sans-nova', 'Inter', sans-serif;
   letter-spacing: -0.018em;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'gill-sans-nova', 'Inter var', sans-serif;
   }
 }
 
@@ -216,5 +218,6 @@ body {
       1,
       theme.bg1
     )} 100%)`};
+  background-image: none;
 }
 `

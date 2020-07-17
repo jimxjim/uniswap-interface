@@ -113,7 +113,7 @@ export default function SwapModalFooter({
       </AutoColumn>
 
       <AutoRow>
-        <ButtonError onClick={onSwap} error={severity > 2} style={{ margin: '10px 0 0 0' }} id="confirm-swap-or-send">
+        <ButtonError onClick={onSwap} error={severity > 2} style={{ margin: '10px auto' }} id="confirm-swap-or-send">
           <Text fontSize={20} fontWeight={500}>
             {confirmText}
           </Text>

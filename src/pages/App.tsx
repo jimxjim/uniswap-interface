@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
@@ -20,12 +20,16 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import BackgroundImage from '../assets/images/bkg-wood@3x.png'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  background-image: url(${BackgroundImage});
+  background-size: cover;
+  background-repeat: no-repaet;
 `
 
 const HeaderWrapper = styled.div`
@@ -44,6 +48,12 @@ const BodyWrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
+  max-width: 1080px;
+  margin: 0 auto;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+      max-width: 420px;
+  `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       padding: 16px;
@@ -53,13 +63,13 @@ const BodyWrapper = styled.div`
 `
 
 const Marginer = styled.div`
-  margin-top: 5rem;
+  margin-top: 10rem;
 `
 
 export default function App() {
   return (
     <Suspense fallback={null}>
-      <HashRouter>
+      <BrowserRouter>
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
@@ -89,7 +99,7 @@ export default function App() {
             <Marginer />
           </BodyWrapper>
         </AppWrapper>
-      </HashRouter>
+      </BrowserRouter>
     </Suspense>
   )
 }

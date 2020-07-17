@@ -19,6 +19,7 @@ export interface Colors {
   bg3: Color
   bg4: Color
   bg5: Color
+  bgBlue: Color
 
   modalBG: Color
   advancedBG: Color
@@ -29,6 +30,7 @@ export interface Colors {
   primary3: Color
   primary4: Color
   primary5: Color
+  primary6: Color
 
   primaryText1: Color
 
@@ -42,6 +44,7 @@ export interface Colors {
   green1: Color
   yellow1: Color
   yellow2: Color
+  paleGrey: Color
 }
 
 export interface Grids {

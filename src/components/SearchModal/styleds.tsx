@@ -51,7 +51,6 @@ export const PaddedColumn = styled(AutoColumn)`
 `
 
 export const MenuItem = styled(RowBetween)`
-  padding: 4px 20px;
   height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
@@ -59,6 +58,7 @@ export const MenuItem = styled(RowBetween)`
     background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+  padding: 4px 20px;
 `
 
 export const SearchInput = styled(Input)`

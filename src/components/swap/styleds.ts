@@ -3,9 +3,20 @@ import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 
 import NumericalInput from '../NumericalInput'
+import { ReactComponent as Switch } from '../../assets/images/switch-arrow.svg'
 
 export const Wrapper = styled.div`
   position: relative;
+`
+
+export const FlexWrapper = styled.div<{ direction?: string }>`
+  position: relative;
+  display: flex;
+  ${({ direction }) => direction && `flex-direction: ${direction};`}
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: column;
+    align-items: center;
+  `};
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
@@ -91,6 +102,11 @@ export const TruncatedText = styled(Text)`
   overflow: hidden;
 `
 
+export const SwitchArrow = styled(Switch)`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    transform: rotate(90deg);
+  `};
+`
 // styles
 export const Dots = styled.span`
   &::after {

@@ -32,6 +32,7 @@ interface TokenSearchModalProps {
   otherSelectedTokenAddress?: string
   otherSelectedText?: string
   showCommonBases?: boolean
+  hideInput?: boolean
 }
 
 export default function TokenSearchModal({
@@ -42,7 +43,8 @@ export default function TokenSearchModal({
   showSendWithSwap,
   otherSelectedTokenAddress,
   otherSelectedText,
-  showCommonBases = false
+  showCommonBases = false,
+  hideInput = false
 }: TokenSearchModalProps) {
   const { t } = useTranslation()
   const { account, chainId } = useActiveWeb3React()
@@ -161,19 +163,21 @@ export default function TokenSearchModal({
             show={tooltipOpen}
             placement="bottom"
           >
-            <SearchInput
-              type="text"
-              id="token-search-input"
-              placeholder={t('tokenSearchPlaceholder')}
-              value={searchQuery}
-              ref={inputRef}
-              onChange={handleInput}
-              onFocus={closeTooltip}
-              onBlur={closeTooltip}
-              onKeyDown={handleEnter}
-            />
+            {!hideInput && (
+              <SearchInput
+                type="text"
+                id="token-search-input"
+                placeholder={t('tokenSearchPlaceholder')}
+                value={searchQuery}
+                ref={inputRef}
+                onChange={handleInput}
+                onFocus={closeTooltip}
+                onBlur={closeTooltip}
+                onKeyDown={handleEnter}
+              />
+            )}
           </Tooltip>
-          {showCommonBases && (
+          {!hideInput && showCommonBases && (
             <CommonBases chainId={chainId} onSelect={handleTokenSelect} selectedTokenAddress={hiddenToken} />
           )}
           <RowBetween>
@@ -193,16 +197,20 @@ export default function TokenSearchModal({
           selectedToken={hiddenToken}
           showSendWithSwap={showSendWithSwap}
         />
-        <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
-        <Card>
-          <AutoRow justify={'center'}>
-            <div>
-              <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={openTooltip}>
-                Having trouble finding a token?
-              </LinkStyledButton>
-            </div>
-          </AutoRow>
-        </Card>
+        {!hideInput && (
+          <>
+            <div style={{ width: '100%', height: '1px', backgroundColor: theme.bg2 }} />
+            <Card>
+              <AutoRow justify={'center'}>
+                <div>
+                  <LinkStyledButton style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }} onClick={openTooltip}>
+                    Having trouble finding a token?
+                  </LinkStyledButton>
+                </div>
+              </AutoRow>
+            </Card>
+          </>
+        )}
       </Column>
     </Modal>
   )

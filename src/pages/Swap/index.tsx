@@ -8,17 +8,19 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
+import { RowToColumn } from '../../components/Row'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, Dots, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, Dots, FlexWrapper, SwitchArrow } from '../../components/swap/styleds'
 import SwapModalFooter from '../../components/swap/SwapModalFooter'
 import SwapModalHeader from '../../components/swap/SwapModalHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
+import InterestPanel from '../../components/swap/InterestPanel'
 import { TokenWarningCards } from '../../components/TokenWarningCard'
 import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallbackFromTrade, ApprovalState } from '../../hooks/useApproveCallback'
@@ -228,8 +230,8 @@ export default function Swap() {
     <>
       <TokenWarningCards tokens={tokens} />
       <AppBody>
-        <SwapPoolTabs active={'swap'} />
-        <Wrapper id="swap-page">
+        {/* <SwapPoolTabs active={'swap'} /> */}
+        <FlexWrapper id="swap-page">
           <ConfirmationModal
             isOpen={showConfirm}
             title="Confirm Swap"
@@ -248,101 +250,90 @@ export default function Swap() {
             pendingText={pendingText}
           />
 
-          <AutoColumn gap={'md'}>
-            <CurrencyInputPanel
-              field={Field.INPUT}
-              label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
-              value={formattedAmounts[Field.INPUT]}
-              showMaxButton={!atMaxAmountInput}
-              token={tokens[Field.INPUT]}
-              onUserInput={handleTypeInput}
-              onMax={() => {
-                maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-              }}
-              onTokenSelection={address => {
-                setApprovalSubmitted(false) // reset 2 step UI for approvals
-                onTokenSelection(Field.INPUT, address)
-              }}
-              otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
-              id="swap-currency-input"
-            />
+          <RowToColumn flex="7" alignItems="flex-start">
+            <RowToColumn noWrap={true}>
+              <CurrencyInputPanel
+                disableTokenSelect={true}
+                field={Field.INPUT}
+                label={independentField === Field.OUTPUT ? 'From (estimated)' : 'From'}
+                value={formattedAmounts[Field.INPUT]}
+                showMaxButton={!atMaxAmountInput}
+                token={tokens[Field.INPUT]}
+                onUserInput={handleTypeInput}
+                onMax={() => {
+                  maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+                }}
+                onTokenSelection={address => {
+                  setApprovalSubmitted(false) // reset 2 step UI for approvals
+                  onTokenSelection(Field.INPUT, address)
+                }}
+                otherSelectedTokenAddress={tokens[Field.OUTPUT]?.address}
+                id="swap-currency-input"
+                alignSelf="flex-start"
+              />
 
-            <CursorPointer>
-              <AutoColumn justify="space-between">
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable>
-                    <ArrowDown
-                      size="16"
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={tokens[Field.INPUT] && tokens[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                    />
+              <CursorPointer>
+                <AutoColumn style={{ padding: '0 1rem' }}>
+                  <ArrowWrapper
+                    clickable
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                  >
+                    <SwitchArrow />
                   </ArrowWrapper>
-                  {recipient === null ? (
-                    <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                      + add recipient (optional)
-                    </LinkStyledButton>
-                  ) : null}
-                </AutoRow>
-              </AutoColumn>
-            </CursorPointer>
-            <CurrencyInputPanel
-              field={Field.OUTPUT}
-              value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
-              showMaxButton={false}
-              token={tokens[Field.OUTPUT]}
-              onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
-              otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
-              id="swap-currency-output"
-            />
+                </AutoColumn>
+              </CursorPointer>
 
-            {recipient !== null ? (
-              <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.text2} />
-                  </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    - remove recipient
-                  </LinkStyledButton>
-                </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-              </>
-            ) : null}
+              <CurrencyInputPanel
+                disableTokenSelect={true}
+                field={Field.OUTPUT}
+                value={formattedAmounts[Field.OUTPUT]}
+                onUserInput={handleTypeOutput}
+                label={independentField === Field.INPUT ? 'To (estimated)' : 'To'}
+                showMaxButton={false}
+                token={tokens[Field.OUTPUT]}
+                onTokenSelection={address => onTokenSelection(Field.OUTPUT, address)}
+                otherSelectedTokenAddress={tokens[Field.INPUT]?.address}
+                id="swap-currency-output"
+                alignSelf="flex-start"
+              >
+                <Card padding={'0.5rem 0 0 0'} borderRadius={'20px'}>
+                  <AutoColumn gap="4px">
+                    <RowBetween align="center">
+                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                        Price
+                      </Text>
+                      <TradePrice
+                        inputToken={tokens[Field.INPUT]}
+                        outputToken={tokens[Field.OUTPUT]}
+                        price={trade?.executionPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
+                    </RowBetween>
 
-            <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-              <AutoColumn gap="4px">
-                <RowBetween align="center">
-                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Price
-                  </Text>
-                  <TradePrice
-                    inputToken={tokens[Field.INPUT]}
-                    outputToken={tokens[Field.OUTPUT]}
-                    price={trade?.executionPrice}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                  />
-                </RowBetween>
+                    {false && allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                      <RowBetween align="center">
+                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          Slippage Tolerance
+                        </ClickableText>
+                        <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                          {allowedSlippage ? allowedSlippage / 100 : '-'}%
+                        </ClickableText>
+                      </RowBetween>
+                    )}
+                  </AutoColumn>
+                </Card>
+              </CurrencyInputPanel>
+            </RowToColumn>
+          </RowToColumn>
 
-                {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                  <RowBetween align="center">
-                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                      Slippage Tolerance
-                    </ClickableText>
-                    <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                      {allowedSlippage ? allowedSlippage / 100 : '-'}%
-                    </ClickableText>
-                  </RowBetween>
-                )}
-              </AutoColumn>
-            </Card>
-          </AutoColumn>
-          <BottomGrouping>
+          <RowToColumn flex="3" alignItems="flex-start" alignContent="flex-start">
+            <RowToColumn>
+              <InterestPanel percent={6} amount={66} token={'USDC'} period={0} />
+            </RowToColumn>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : noRoute && userHasSpecifiedInputOutput ? (
@@ -390,7 +381,7 @@ export default function Swap() {
                 disabled={!isValid || (priceImpactSeverity > 3 && !expertMode)}
                 error={isValid && priceImpactSeverity > 2}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Text fontSize={16} fontWeight={500}>
                   {error
                     ? error
                     : priceImpactSeverity > 3 && !expertMode
@@ -400,8 +391,8 @@ export default function Swap() {
               </ButtonError>
             )}
             {betterTradeLinkVersion && <BetterTradeLink version={betterTradeLinkVersion} />}
-          </BottomGrouping>
-        </Wrapper>
+          </RowToColumn>
+        </FlexWrapper>
       </AppBody>
 
       <AdvancedSwapDetailsDropdown trade={trade} />

@@ -12,11 +12,12 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisbaledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '18px')};
+  padding: ${({ padding }) => (padding ? padding : '14px')};
   width: ${({ width }) => (width ? width : '100%')};
-  font-weight: 500;
+  max-width: 310px;
+  font-weight: 600;
   text-align: center;
-  border-radius: 20px;
+  border-radius: 8px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
@@ -34,14 +35,21 @@ const Base = styled(RebassButton)<{
   > * {
     user-select: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 288px;
+  `};
 `
 
 export const ButtonPrimary = styled(Base)`
   background-color: ${({ theme }) => theme.primary1};
   color: white;
+  background-image: ${({ theme }) => theme.bgBlue};
+  border: none;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    box-shadow: none;
   }
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
@@ -49,6 +57,7 @@ export const ButtonPrimary = styled(Base)`
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
     background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    box-shadow: none;
   }
   &:disabled {
     background-color: ${({ theme, altDisbaledStyle }) => (altDisbaledStyle ? theme.primary1 : theme.bg3)};
@@ -57,6 +66,8 @@ export const ButtonPrimary = styled(Base)`
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
+    background-image: none;
+    border: none;
   }
 `
 
@@ -230,7 +241,7 @@ const ButtonConfirmedStyle = styled(Base)`
 const ButtonErrorStyle = styled(Base)`
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
-
+  border: none;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
     background-color: ${({ theme }) => darken(0.05, theme.red1)};
@@ -248,6 +259,7 @@ const ButtonErrorStyle = styled(Base)`
     box-shadow: none;
     background-color: ${({ theme }) => theme.red1};
     border: 1px solid ${({ theme }) => theme.red1};
+    border: none;
   }
 `
 

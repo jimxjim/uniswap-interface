@@ -15,11 +15,9 @@ import { useTokenBalanceTreatingWETHasETH } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
-import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import VersionSwitch from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -102,11 +100,14 @@ const UniIcon = styled.div`
   :hover {
     transform: rotate(-5deg);
   }
+<<<<<<< HEAD
   ${({ theme }) => theme.mediaWidth.upToSmall`
     img { 
       width: 4.5rem;
     }
   `};
+=======
+>>>>>>> e18d886... hToken panel v1
 `
 
 const HeaderControls = styled.div`
@@ -168,9 +169,9 @@ export default function Header() {
             </AccountElement>
           </HeaderElement>
           <HeaderElementWrap>
-            <VersionSwitch />
+            {/* <VersionSwitch /> */}
             <Settings />
-            <Menu />
+            {/* <Menu /> */}
           </HeaderElementWrap>
         </HeaderControls>
       </RowBetween>

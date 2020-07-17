@@ -19,11 +19,13 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.paleGrey};
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
-  height: 2.2rem;
+  height: 2.25rem;
   font-size: 20px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
@@ -35,10 +37,13 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   user-select: none;
   border: none;
   padding: 0 0.5rem;
+  background-color: ${({ theme }) => theme.paleGrey};
+  cursor: default;
 
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    background-color: ${({ theme }) => theme.paleGrey};
   }
 `
 
@@ -46,9 +51,9 @@ const LabelRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   color: ${({ theme }) => theme.text1};
-  font-size: 0.75rem;
-  line-height: 1rem;
-  padding: 0.75rem 1rem 0 1rem;
+  font-size: 1rem;
+  line-height: normal;
+  padding: 0.75rem 0 10px 0;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -71,17 +76,29 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   }
 `
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{
+  hideInput?: boolean
+  alignSelf?: string
+}>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   background-color: ${({ theme }) => theme.bg2};
   z-index: 1;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 310px;
+  align-self: ${({ alignSelf }) => alignSelf || 'inherit'};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    align-self: auto;
+    max-width: 288px;
+    margin-bottom: 16px;
+  `};
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  // border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  // border: 1px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg1};
 `
 
@@ -93,20 +110,20 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.primary6};
   border-radius: 0.5rem;
   font-size: 0.875rem;
 
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.primary6};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary6};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.primary6};
     outline: none;
   }
 
@@ -133,6 +150,8 @@ interface CurrencyInputPanelProps {
   otherSelectedTokenAddress?: string | null
   id: string
   showCommonBases?: boolean
+  children?: React.ReactNode
+  alignSelf?: string
 }
 
 export default function CurrencyInputPanel({
@@ -152,7 +171,9 @@ export default function CurrencyInputPanel({
   showSendWithSwap = false,
   otherSelectedTokenAddress = null,
   id,
-  showCommonBases
+  showCommonBases,
+  children,
+  alignSelf
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -166,12 +187,12 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   return (
-    <InputPanel id={id}>
+    <InputPanel alignSelf={alignSelf} id={id}>
       <Container hideInput={hideInput}>
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+              <TYPE.body color={theme.text2} fontWeight={'bold'} fontSize={16}>
                 {label}
               </TYPE.body>
               {account && (
@@ -181,6 +202,7 @@ export default function CurrencyInputPanel({
                     color={theme.text2}
                     fontWeight={500}
                     fontSize={14}
+                    letterSpacing={1}
                     style={{ display: 'inline' }}
                   >
                     {!hideBalance && !!token && userTokenBalance
@@ -198,6 +220,7 @@ export default function CurrencyInputPanel({
               <NumericalInput
                 className="token-amount-input"
                 value={value}
+                fontSize={'16px'}
                 onUserInput={val => {
                   onUserInput(field, val)
                 }}
@@ -239,6 +262,7 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
         </InputRow>
+        <>{children}</>
       </Container>
       {!disableTokenSelect && (
         <TokenSearchModal
@@ -247,6 +271,7 @@ export default function CurrencyInputPanel({
           onTokenSelect={onTokenSelection}
           showSendWithSwap={showSendWithSwap}
           hiddenToken={token?.address}
+          hideInput={true}
           otherSelectedTokenAddress={otherSelectedTokenAddress}
           otherSelectedText={field === Field.INPUT ? 'Selected as output' : 'Selected as input'}
           showCommonBases={showCommonBases}

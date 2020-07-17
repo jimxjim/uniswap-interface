@@ -34,9 +34,9 @@ export default function TradePrice({ price, inputToken, outputToken, showInverte
       {show ? (
         <>
           {formattedPrice ?? '-'} {label}
-          <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
+          {/* <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
             <Repeat size={14} />
-          </StyledBalanceMaxMini>
+          </StyledBalanceMaxMini> */}
         </>
       ) : (
         '-'

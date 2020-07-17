@@ -9,23 +9,24 @@ import {
   useDarkModeManager
 } from '../../state/user/hooks'
 import SlippageTabs from '../SlippageTabs'
-import { RowFixed, RowBetween } from '../Row'
-import { TYPE } from '../../theme'
-import QuestionHelper from '../QuestionHelper'
-import Toggle from '../Toggle'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
-import { ButtonError } from '../Button'
 import { useSettingsMenuOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { Text } from 'rebass'
-import Modal from '../Modal'
+
+// import { RowFixed, RowBetween } from '../Row'
+// import { TYPE } from '../../theme'
+// import QuestionHelper from '../QuestionHelper'
+// import Toggle from '../Toggle'
+// import { ButtonError } from '../Button'
+// import { Text } from 'rebass'
+// import Modal from '../Modal'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.primary6};
   }
 `
 
@@ -50,7 +51,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.white};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -59,7 +60,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+    background-color: ${({ theme }) => theme.white};
   }
 
   svg {
@@ -156,7 +157,7 @@ export default function SettingsTab() {
 
   return (
     <StyledMenu ref={node}>
-      <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
+      {/* <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
             <RowBetween style={{ padding: '0 2rem' }}>
@@ -192,7 +193,7 @@ export default function SettingsTab() {
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
-      </Modal>
+      </Modal> */}
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
         {expertMode && (
@@ -205,17 +206,14 @@ export default function SettingsTab() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
-            </Text>
+          <AutoColumn gap="sm" style={{ padding: '1rem' }}>
             <SlippageTabs
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
               deadline={deadline}
               setDeadline={setDeadline}
             />
-            <Text fontWeight={600} fontSize={14}>
+            {/* <Text fontWeight={'bold'} fontSize={16}>
               Interface Settings
             </Text>
             <RowBetween>
@@ -247,7 +245,7 @@ export default function SettingsTab() {
                 </TYPE.black>
               </RowFixed>
               <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-            </RowBetween>
+            </RowBetween> */}
           </AutoColumn>
         </MenuFlyout>
       )}
